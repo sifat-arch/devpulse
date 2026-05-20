@@ -1,6 +1,10 @@
-import express, { request } from "express";
+import express, { application, request, type Application } from "express";
+import { authRouter } from "./models/auth/auth.route";
 
-const app = express();
+const app: Application = express();
+app.use(express.json());
+
+app.use("/api/auth/signup", authRouter);
 
 app.get("/", (req, res) => {
   res.json({ data: "hello world" });
