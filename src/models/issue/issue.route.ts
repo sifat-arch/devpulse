@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { issueController } from "./issue.controller";
 import auth from "../../middlewere/auth";
+import { canUpdateIssue } from "../../middlewere/canUpdateIssue";
 
 const router = Router();
 

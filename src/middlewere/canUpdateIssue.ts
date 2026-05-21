@@ -1,10 +1,12 @@
 import type { NextFunction, Request, Response } from "express";
 import sendResponse from "../utility/sendResponse";
-import jwt, { type JwtPayload } from "jsonwebtoken";
-import config from "../config";
-import { pool } from "../db";
 
-const auth = () => {
+import jwt from "jsonwebtoken";
+import type { JwtPayload } from "jsonwebtoken";
+import { pool } from "../db";
+import config from "../config";
+
+export const canUpdateIssue = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const tokenStr = req.headers.authorization;
@@ -22,8 +24,6 @@ const auth = () => {
         config.secret as string,
       ) as JwtPayload;
 
-      console.log("decis", decodeed);
-
       const userData = await pool.query(
         `
         SELECT * from users WHERE id=$1
@@ -33,6 +33,8 @@ const auth = () => {
       );
 
       const user = userData.rows[0];
+
+      console.log("who users", user);
 
       if (userData.rows[0] === 0) {
         sendResponse(res, {
@@ -58,5 +60,3 @@ const auth = () => {
     }
   };
 };
-
-export default auth;

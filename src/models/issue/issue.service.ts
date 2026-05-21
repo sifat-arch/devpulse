@@ -1,5 +1,15 @@
 import { pool } from "../../db";
 
+export type User = {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  role: "maintainer" | "contributor";
+  created_at: Date;
+  updated_at: Date;
+};
+
 const createIssuesInDB = async (
   payload: { title: string; description: string; type: string; status: string },
   id: string,
@@ -102,14 +112,37 @@ const getSingleIssueFromDB = async (id: string) => {
 };
 
 const updateIssueFromDB = async (
+  user: User,
   payload: { title: string; description: string; type: string },
   id: string,
 ) => {
   const { title, description, type } = payload;
+
+  const issueRes = await pool.query(
+    `
+    SELECT * FROM issues WHERE id=$1
+    
+    `,
+    [id],
+  );
+
+  if (!issueRes.rows.length) throw new Error("Issue not found");
+
+  const issue = issueRes.rows[0];
+
+  const isMaintainer = user.role === "maintainer";
+  const isOwner = issue.reporter_id === user.id;
+
+  const isOpen = issue.status === "open";
+
+  if (!isMaintainer && (!isOwner || !isOpen)) {
+    throw new Error("Forbidden");
+  }
+
   const result = await pool.query(
     `
          UPDATE issues
-         SET title=$1,description=$2,type=$3
+         SET title=COALESCE($1,title),description=COALESCE($2,description),type=COALESCE($3,type)
          WHERE id=$4 RETURNING * 
       
       `,
