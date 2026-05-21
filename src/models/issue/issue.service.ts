@@ -64,7 +64,64 @@ const getAllIssuesFromDB = async (payload: any) => {
   return formattedIssues;
 };
 
+const getSingleIssueFromDB = async (id: string) => {
+  const result = await pool.query(
+    `
+       SELECT * FROM issues WHERE id=$1
+      `,
+    [id],
+  );
+
+  const singleUser = result.rows;
+
+  const reporterID = result.rows[0].reporter_id;
+
+  const reporterArr = await pool.query(
+    `
+      
+      SELECT id,name,role FROM users WHERE id=$1
+    
+    `,
+    [reporterID],
+  );
+  const reporter = reporterArr.rows[0];
+
+  const issues = result.rows[0];
+
+  const fResult = {
+    id: issues.id,
+    title: issues.title,
+    description: issues.description,
+    type: issues.type,
+    status: issues.status,
+    reporter: reporter,
+    created_at: issues.created_at,
+    updated_at: issues.updated_at,
+  };
+  return fResult;
+};
+
+const updateIssueFromDB = async (
+  payload: { title: string; description: string; type: string },
+  id: string,
+) => {
+  const { title, description, type } = payload;
+  const result = await pool.query(
+    `
+         UPDATE issues
+         SET title=$1,description=$2,type=$3
+         WHERE id=$4 RETURNING * 
+      
+      `,
+    [title, description, type, id],
+  );
+
+  return result;
+};
+
 export const issueServices = {
   createIssuesInDB,
   getAllIssuesFromDB,
+  getSingleIssueFromDB,
+  updateIssueFromDB,
 };

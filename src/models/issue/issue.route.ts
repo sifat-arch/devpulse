@@ -6,5 +6,7 @@ const router = Router();
 
 router.post("/", auth(), issueController.createUssues);
 router.get("/", issueController.getAllIssues);
+router.get("/:id", issueController.getSingleIssues);
+router.patch("/:id", auth(), issueController.updateIssues);
 
 export const issueRouter = router;

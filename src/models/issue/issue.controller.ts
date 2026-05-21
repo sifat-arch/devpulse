@@ -44,7 +44,54 @@ const getAllIssues = async (req: Request, res: Response) => {
   }
 };
 
+const getSingleIssues = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const result = await issueServices.getSingleIssueFromDB(id as string);
+
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Success!!",
+      data: result,
+    });
+  } catch (error: any) {
+    sendResponse(res, {
+      statusCode: 500,
+      success: false,
+      message: error.message || error.message,
+    });
+  }
+};
+
+const updateIssues = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const result = await issueServices.updateIssueFromDB(
+      req.body,
+      id as string,
+    );
+
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Issue updated successfully",
+      data: result.rows[0],
+    });
+  } catch (error: any) {
+    sendResponse(res, {
+      statusCode: 500,
+      success: false,
+      message: error.message || error.message,
+    });
+  }
+};
+
 export const issueController = {
   createUssues,
   getAllIssues,
+  getSingleIssues,
+  updateIssues,
 };
