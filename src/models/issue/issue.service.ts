@@ -32,7 +32,36 @@ const getAllIssuesFromDB = async (payload: any) => {
     [type, status],
   );
 
-  return result;
+  const issues = result.rows;
+
+  const reporterIds = issues.map((issue) => issue.reporter_id);
+
+  const userResults = await pool.query(
+    `
+
+        SELECT id,name,role FROM users WHERE id=ANY($1)
+    `,
+    [reporterIds],
+  );
+
+  const users = userResults.rows;
+
+  const formattedIssues = issues.map((issue) => {
+    const reporter = users.find((user) => user.id === issue.reporter_id);
+
+    return {
+      id: issue.id,
+      title: issue.title,
+      description: issue.description,
+      type: issue.type,
+      status: issue.status,
+      reporter,
+      created_at: issue.created_at,
+      updated_at: issue.updated_at,
+    };
+  });
+
+  return formattedIssues;
 };
 
 export const issueServices = {

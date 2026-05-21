@@ -33,7 +33,7 @@ const getAllIssues = async (req: Request, res: Response) => {
       statusCode: 200,
       success: true,
       message: "Issue created successfully",
-      data: result.rows,
+      data: result,
     });
   } catch (error: any) {
     sendResponse(res, {
