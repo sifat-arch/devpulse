@@ -7,7 +7,7 @@ A collaborative backend platform for software teams to report bugs, suggest feat
 # Live URL
 
 bash
-https://your-live-url.com
+https://devpules.vercel.app/
 
 Features
 User registration and login with JWT authentication
