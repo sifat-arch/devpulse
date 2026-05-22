@@ -14,11 +14,13 @@ const createUser = async (req: Request, res: Response) => {
       message: "User registered successfully",
       data: result.rows[0],
     });
-  } catch (error) {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong";
     sendResponse(res, {
       statusCode: 400,
       success: false,
-      message: "Sign Up Failed",
+      message,
       error: error,
     });
   }
@@ -37,11 +39,17 @@ const loginUser = async (req: Request, res: Response) => {
         user: result.user,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong";
     sendResponse(res, {
       statusCode: 401,
       success: false,
-      message: error.message || error.message,
+      message,
+      error: {
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      },
     });
   }
 };

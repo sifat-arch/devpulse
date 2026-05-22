@@ -13,11 +13,17 @@ const createUssues = async (req: Request, res: Response) => {
       message: "Issue created successfully",
       data: result.rows[0],
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong";
     sendResponse(res, {
       statusCode: 400,
       success: false,
-      message: error.message || error.message,
+      message,
+      error: {
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      },
     });
   }
 };
@@ -34,11 +40,17 @@ const getAllIssues = async (req: Request, res: Response) => {
       message: "Issue created successfully",
       data: result,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong";
     sendResponse(res, {
       statusCode: 500,
       success: false,
-      message: error.message || error.message,
+      message,
+      error: {
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      },
     });
   }
 };
@@ -55,11 +67,17 @@ const getSingleIssues = async (req: Request, res: Response) => {
       message: "Success!!",
       data: result,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong";
     sendResponse(res, {
       statusCode: 500,
       success: false,
-      message: error.message || error.message,
+      message,
+      error: {
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      },
     });
   }
 };
@@ -82,11 +100,17 @@ const updateIssues = async (req: Request, res: Response) => {
       message: "Issue updated successfully",
       data: result.rows[0],
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong";
     sendResponse(res, {
       statusCode: 400,
       success: false,
-      message: error.message || error.message,
+      message,
+      error: {
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      },
     });
   }
 };
@@ -113,11 +137,17 @@ const deleteIssues = async (req: Request, res: Response) => {
       success: true,
       message: "message deleted successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Something went wrong";
     sendResponse(res, {
       statusCode: 500,
       success: false,
-      message: error.message || error.message,
+      message,
+      error: {
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      },
     });
   }
 };
