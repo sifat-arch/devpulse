@@ -1,14 +1,5 @@
 import { pool } from "../../db";
-
-export type User = {
-  id: number;
-  name: string;
-  email: string;
-  password: string;
-  role: "maintainer" | "contributor";
-  created_at: Date;
-  updated_at: Date;
-};
+import type { User } from "../../types/types";
 
 const createIssuesInDB = async (
   payload: { title: string; description: string; type: string; status: string },
@@ -152,9 +143,29 @@ const updateIssueFromDB = async (
   return result;
 };
 
+const deleteIssueFromDB = (id: string, user: User) => {
+  const role = user.role;
+
+  if (role !== "maintainer") {
+    throw new Error("Unauthorized access");
+  }
+
+  const result = pool.query(
+    `
+        DELETE FROM issues WHERE id=$1
+        
+      
+      `,
+    [id],
+  );
+
+  return result;
+};
+
 export const issueServices = {
   createIssuesInDB,
   getAllIssuesFromDB,
   getSingleIssueFromDB,
   updateIssueFromDB,
+  deleteIssueFromDB,
 };

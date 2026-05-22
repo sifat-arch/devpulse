@@ -3,6 +3,7 @@ import sendResponse from "../utility/sendResponse";
 import jwt, { type JwtPayload } from "jsonwebtoken";
 import config from "../config";
 import { pool } from "../db";
+import type { AuthUser } from "../types/types";
 
 const auth = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -21,8 +22,6 @@ const auth = () => {
         tokenStr as string,
         config.secret as string,
       ) as JwtPayload;
-
-      console.log("decis", decodeed);
 
       const userData = await pool.query(
         `
@@ -50,7 +49,7 @@ const auth = () => {
         });
       }
 
-      req.user = user;
+      req.user = decodeed;
 
       next();
     } catch (error) {
