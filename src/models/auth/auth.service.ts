@@ -2,13 +2,9 @@ import bcrypt from "bcrypt";
 import { pool } from "../../db";
 import jwt from "jsonwebtoken";
 import config from "../../config";
+import type { CreateUserPayload, LoginPayload } from "../../types/types";
 
-const createUserIntoDB = async (payload: {
-  name: string;
-  email: string;
-  password: string;
-  role: string;
-}) => {
+const createUserIntoDB = async (payload: CreateUserPayload) => {
   const { name, email, password, role } = payload;
 
   const passwordHashed = await bcrypt.hash(password, 10);
@@ -24,10 +20,7 @@ const createUserIntoDB = async (payload: {
   return result;
 };
 
-const loginUserIntoDB = async (payload: {
-  email: string;
-  password: string;
-}) => {
+const loginUserIntoDB = async (payload: LoginPayload) => {
   const { email, password } = payload;
   // find the user if exist
   const userData = await pool.query(

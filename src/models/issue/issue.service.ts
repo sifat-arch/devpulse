@@ -1,10 +1,12 @@
 import { pool } from "../../db";
-import type { User } from "../../types/types";
+import type {
+  CreateIssuePayload,
+  IssueQuery,
+  UpdatePaylaod,
+  User,
+} from "../../types/types";
 
-const createIssuesInDB = async (
-  payload: { title: string; description: string; type: string; status: string },
-  id: string,
-) => {
+const createIssuesInDB = async (payload: CreateIssuePayload, id: string) => {
   const { title, description, type, status } = payload;
 
   const result = await pool.query(
@@ -17,8 +19,7 @@ const createIssuesInDB = async (
   return result;
 };
 
-const getAllIssuesFromDB = async (payload: any) => {
-  console.log(payload.sort);
+const getAllIssuesFromDB = async (payload: IssueQuery) => {
   const order = payload.sort === "oldest" ? "ASC" : "DESC";
   const type = payload.type || null;
   const status = payload.status || null;
@@ -104,7 +105,7 @@ const getSingleIssueFromDB = async (id: string) => {
 
 const updateIssueFromDB = async (
   user: User,
-  payload: { title: string; description: string; type: string },
+  payload: UpdatePaylaod,
   id: string,
 ) => {
   const { title, description, type } = payload;

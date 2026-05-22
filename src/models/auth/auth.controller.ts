@@ -16,7 +16,7 @@ const createUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
     sendResponse(res, {
-      statusCode: 500,
+      statusCode: 400,
       success: false,
       message: "Sign Up Failed",
       error: error,
@@ -39,7 +39,7 @@ const loginUser = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     sendResponse(res, {
-      statusCode: 400,
+      statusCode: 401,
       success: false,
       message: error.message || error.message,
     });

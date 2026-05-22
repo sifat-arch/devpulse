@@ -28,8 +28,6 @@ const getAllIssues = async (req: Request, res: Response) => {
 
     const result = await issueServices.getAllIssuesFromDB(query);
 
-    console.log(result);
-
     sendResponse(res, {
       statusCode: 200,
       success: true,
@@ -38,7 +36,7 @@ const getAllIssues = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     sendResponse(res, {
-      statusCode: 400,
+      statusCode: 500,
       success: false,
       message: error.message || error.message,
     });
@@ -86,7 +84,7 @@ const updateIssues = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     sendResponse(res, {
-      statusCode: 500,
+      statusCode: 400,
       success: false,
       message: error.message || error.message,
     });
