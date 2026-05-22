@@ -98,7 +98,7 @@ npm install
 
 # Create Environment Variables
 Create a .env file in the root directory.
-DB_CONNECT_STR=postgresql://neondb_owner:npg_YXQfrNdGp8Z4@ep-shy-cell-ao1mwxpa-pooler.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+DB_CONNECT_STR=**************
 PORT=5000
 SECRET=KJDDFHDAHADJLKFHAD
 
